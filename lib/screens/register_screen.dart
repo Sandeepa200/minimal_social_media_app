@@ -2,18 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:minimal_social_media_app/components/custom_btn.dart';
 import 'package:minimal_social_media_app/components/custom_txt_field.dart';
 
-class LoginScreen extends StatelessWidget {
+class RegisterScreen extends StatelessWidget {
+
   final void Function()? onTap;
+  RegisterScreen({super.key, required this.onTap});
 
-  LoginScreen({super.key, required this.onTap});
-
+  final TextEditingController usernameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-
-  void login() {}
+  final TextEditingController confirmPasswordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    void register() {}
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       body: Center(
@@ -37,6 +38,12 @@ class LoginScreen extends StatelessWidget {
             ),
             const SizedBox(height: 50),
             CustomTextField(
+              hintText: "Username",
+              obscureText: false,
+              controller: usernameController,
+            ),
+            const SizedBox(height: 10),
+            CustomTextField(
               hintText: "Email",
               obscureText: false,
               controller: emailController,
@@ -46,6 +53,12 @@ class LoginScreen extends StatelessWidget {
               hintText: "Password",
               obscureText: true,
               controller: passwordController,
+            ),
+            const SizedBox(height: 10),
+            CustomTextField(
+              hintText: "Retype Password",
+              obscureText: true,
+              controller: confirmPasswordController,
             ),
             const SizedBox(height: 10),
             Row(
@@ -58,19 +71,19 @@ class LoginScreen extends StatelessWidget {
             ),
             const SizedBox(height: 25),
             CustomButton(
-              text: "Login",
-              onTap: login,
+              text: "Register",
+              onTap: register,
             ),
             const SizedBox(height: 25),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text("Don't have an account?",
+                Text("Already have an account?",
                     style: TextStyle(
                         color: Theme.of(context).colorScheme.inversePrimary)),
                 TextButton(
                   onPressed: onTap,
-                  child: Text("Sign up Here",
+                  child: Text("Login Here",
                       style: TextStyle(
                           color: Theme.of(context).colorScheme.inversePrimary,
                           fontWeight: FontWeight.bold)),
