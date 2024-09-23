@@ -65,14 +65,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
         password: passwordController.text,
       );
 
-      createUserDocument(userCredential);
-
       if (context.mounted) {
         Navigator.pop(context);
+        await createUserDocument(userCredential);
         displayMessageToUser("Account created successfully", context);
       }
     } on FirebaseAuthException catch (e) {
-      if (context.mounted) Navigator.pop(context);
+      Navigator.pop(context);
       String message;
       if (e.code == 'weak-password') {
         message = 'The password provided is too weak.';
@@ -81,14 +80,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
       } else {
         message = 'Registration failed. Please try again later.';
       }
-
-      if (context.mounted) {
-        displayMessageToUser(message, context);
-      }
+      displayMessageToUser(message, context);
     } catch (e) {
-      // Close the dialog
-      if (context.mounted) {
-        Navigator.pop(context);
+      if (mounted) {
+        Navigator.pop(context); // Dismiss loading
         displayMessageToUser('An unexpected error occurred.', context);
       }
     }

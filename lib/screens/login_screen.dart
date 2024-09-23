@@ -52,31 +52,37 @@ class _LoginScreenState extends State<LoginScreen> {
         email: emailController.text,
         password: passwordController.text,
       );
-      Navigator.pop(context);
-      displayMessageToUser("Successfully Logged In", context);
-      return;
+
+      // Successful login
+      if (mounted) {
+        Navigator.pop(context); // Dismiss loading
+        displayMessageToUser("Successfully Logged In", context);
+      }
     } on FirebaseAuthException catch (e) {
-      Navigator.pop(context);
+      if (mounted) Navigator.pop(context); // Dismiss loading
 
       // Handle specific Firebase login errors
-      if (e.code == 'invalid-credential') {
-        displayMessageToUser("invalid credential. Please try again.", context);
-        return;
-      } else if (e.code == 'user-not-found') {
-        displayMessageToUser("No account found for this email.", context);
-        return;
-      } else if (e.code == 'invalid-email') {
-        displayMessageToUser("The email address is not valid.", context);
-        return;
-      } else if (e.code == 'too-many-requests') {
-        displayMessageToUser(
-            "Too many login attempts. Try again later.", context);
-        return;
-      } else {
-        // Generic error message for other cases
-        displayMessageToUser("Login failed. Please try again.", context);
-        return;
+      String message;
+      switch (e.code) {
+        case 'invalid-credential':
+          message = "Invalid credential. Please try again.";
+          break;
+        case 'user-not-found':
+          message = "No account found for this email.";
+          break;
+        case 'invalid-email':
+          message = "The email address is not valid.";
+          break;
+        case 'too-many-requests':
+          message = "Too many login attempts. Try again later.";
+          break;
+        default:
+          message = "Login failed. Please try again.";
       }
+      displayMessageToUser(message, context);
+    } catch (e) {
+      if (mounted) Navigator.pop(context); // Dismiss loading
+      displayMessageToUser("Login failed. Please try again.", context);
     }
   }
 

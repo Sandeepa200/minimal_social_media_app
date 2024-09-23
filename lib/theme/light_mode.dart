@@ -49,4 +49,8 @@ ThemeData lightMode = ThemeData(
       borderRadius: BorderRadius.circular(10),
     ),
   ),
+  progressIndicatorTheme: ProgressIndicatorThemeData(
+    color: Colors.pink.shade600, // Primary color for CircularProgressIndicator
+    circularTrackColor: Colors.pink.shade100, // Track color for CircularProgressIndicator
+  ),
 );
