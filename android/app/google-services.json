@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "484555162611",
+    "firebase_url": "https://our-love-diary-app-default-rtdb.firebaseio.com",
+    "project_id": "our-love-diary-app",
+    "storage_bucket": "our-love-diary-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:484555162611:android:9f7e1cb3939438c3fa4886",
+        "android_client_info": {
+          "package_name": "com.example.minimal_social_media_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDmzR6UYsYo661ltGLQTrAxwTzgGwPjwuY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

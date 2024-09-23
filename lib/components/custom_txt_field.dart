@@ -23,7 +23,7 @@ class CustomTextField extends StatelessWidget {
         )),
         hintText: hintText,
         filled: true,
-        fillColor: Theme.of(context).colorScheme.background,
+        fillColor: Theme.of(context).colorScheme.surface,
         contentPadding: const EdgeInsets.all(8),
       ),
       obscureText: obscureText,
