@@ -30,15 +30,30 @@ class UsersScreen extends StatelessWidget {
 
             final users = snapshot.data!.docs;
 
-            return ListView.builder(
-              itemCount: users.length,
-              itemBuilder: (context, index) {
-                final user = users[index];
-                return ListTile(
-                  title: Text(user['username']),
-                  subtitle: Text(user['email']),
-                );
-              },
+            return Column(
+              children: [
+                // const Padding(
+                //   padding: EdgeInsets.only(top: 50.0, left: 25.0),
+                //   child: Row(
+                //     children: [
+                //       CustomBackBtn(),
+                //     ],
+                //   ),
+                // ),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: users.length,
+                    padding: const EdgeInsets.all(0),
+                    itemBuilder: (context, index) {
+                      final user = users[index];
+                      return ListTile(
+                        title: Text(user['username']),
+                        subtitle: Text(user['email']),
+                      );
+                    },
+                  ),
+                )
+              ],
             );
           }),
     );
