@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:minimal_social_media_app/components/custom_list_tile.dart';
 import 'package:minimal_social_media_app/helper/helper_functions.dart';
 
 class UsersScreen extends StatelessWidget {
@@ -40,16 +41,17 @@ class UsersScreen extends StatelessWidget {
                 //     ],
                 //   ),
                 // ),
+                const SizedBox(height: 25),
                 Expanded(
                   child: ListView.builder(
                     itemCount: users.length,
                     padding: const EdgeInsets.all(0),
                     itemBuilder: (context, index) {
                       final user = users[index];
-                      return ListTile(
-                        title: Text(user['username']),
-                        subtitle: Text(user['email']),
-                      );
+
+                      String username = user['username'];
+                      String email = user['email'];
+                      return CustomListTile(title: username, subtitle: email);
                     },
                   ),
                 )
