@@ -61,6 +61,17 @@ class CustomDrawer extends StatelessWidget {
                   Navigator.pushNamed(context, "/users_screen");
                 },
               ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 25.0),
+              child: ListTile(
+                leading: const Icon(Icons.group),
+                title: const Text("W E A T H E R"),
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.pushNamed(context, "/Weather_screen");
+                },
+              ),
             )
           ]),
           Padding(
