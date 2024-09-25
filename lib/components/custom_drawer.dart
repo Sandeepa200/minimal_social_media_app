@@ -69,7 +69,7 @@ class CustomDrawer extends StatelessWidget {
                 title: const Text("W E A T H E R"),
                 onTap: () {
                   Navigator.pop(context);
-                  Navigator.pushNamed(context, "/Weather_screen");
+                  Navigator.pushNamed(context, "/weather_screen");
                 },
               ),
             )
