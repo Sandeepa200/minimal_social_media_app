@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:minimal_social_media_app/components/custom_btn.dart';
 import 'package:minimal_social_media_app/components/custom_txt_field.dart';
 import 'package:minimal_social_media_app/helper/helper_functions.dart';
+import 'package:minimal_social_media_app/services/auth_service.dart';
 
 class RegisterScreen extends StatefulWidget {
   final void Function()? onTap;
@@ -14,11 +15,13 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  final TextEditingController usernameController = TextEditingController();
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController =
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
       TextEditingController();
+
+  final AuthService _authService = AuthService();
 
   void register() async {
     showDialog(
@@ -36,23 +39,23 @@ class _RegisterScreenState extends State<RegisterScreen> {
       },
     );
 
-    if (usernameController.text == "" ||
-        emailController.text == "" ||
-        passwordController.text == "" ||
-        confirmPasswordController.text == "") {
+    if (_usernameController.text == "" ||
+        _emailController.text == "" ||
+        _passwordController.text == "" ||
+        _confirmPasswordController.text == "") {
       Navigator.pop(context);
       displayMessageToUser("Please fill in all the fields", context);
       return;
     }
 
     if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w]{2,4}$')
-        .hasMatch(emailController.text)) {
+        .hasMatch(_emailController.text)) {
       Navigator.pop(context);
       displayMessageToUser("Please enter a valid email", context);
       return;
     }
 
-    if (passwordController.text != confirmPasswordController.text) {
+    if (_passwordController.text != _confirmPasswordController.text) {
       Navigator.pop(context);
       displayMessageToUser("Passwords don't match", context);
       return;
@@ -60,14 +63,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     try {
       UserCredential? userCredential =
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: emailController.text,
-        password: passwordController.text,
+          await _authService.registerWithEmailAndPassword(
+        email: _emailController.text,
+        password: _passwordController.text,
       );
 
-      if (context.mounted) {
+      if (userCredential != null && mounted) {
         Navigator.pop(context);
-        await createUserDocument(userCredential);
+        await _authService.createUserDocument(
+            userCredential, _usernameController.text);
         displayMessageToUser("Account created successfully", context);
       }
     } on FirebaseAuthException catch (e) {
@@ -85,22 +89,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
       if (mounted) {
         Navigator.pop(context); // Dismiss loading
         displayMessageToUser('An unexpected error occurred.', context);
-      }
-    }
-  }
-
-  Future<void> createUserDocument(UserCredential? userCredential) async {
-    if (userCredential != null && userCredential.user != null) {
-      try {
-        await FirebaseFirestore.instance
-            .collection('users')
-            .doc(userCredential.user!.email)
-            .set({
-          'email': userCredential.user!.email,
-          'username': usernameController.text,
-        });
-      } catch (e) {
-        displaySnackbarMessage(context, 'Error creating user document.');
       }
     }
   }
@@ -133,25 +121,25 @@ class _RegisterScreenState extends State<RegisterScreen> {
               CustomTextField(
                 hintText: "Username",
                 obscureText: false,
-                controller: usernameController,
+                controller: _usernameController,
               ),
               const SizedBox(height: 10),
               CustomTextField(
                 hintText: "Email",
                 obscureText: false,
-                controller: emailController,
+                controller: _emailController,
               ),
               const SizedBox(height: 10),
               CustomTextField(
                 hintText: "Password",
                 obscureText: true,
-                controller: passwordController,
+                controller: _passwordController,
               ),
               const SizedBox(height: 10),
               CustomTextField(
                 hintText: "Retype Password",
                 obscureText: true,
-                controller: confirmPasswordController,
+                controller: _confirmPasswordController,
               ),
               const SizedBox(height: 10),
               Row(

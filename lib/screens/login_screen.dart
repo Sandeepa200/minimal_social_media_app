@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:minimal_social_media_app/components/custom_btn.dart';
 import 'package:minimal_social_media_app/components/custom_txt_field.dart';
 import 'package:minimal_social_media_app/helper/helper_functions.dart';
+import 'package:minimal_social_media_app/services/auth_service.dart';
 
 class LoginScreen extends StatefulWidget {
   final void Function()? onTap;
@@ -14,11 +15,12 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController emailController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
-  final TextEditingController passwordController = TextEditingController();
+  final AuthService _authService = AuthService();
 
-  void login() async {
+  void login(BuildContext context) async {
     showDialog(
       context: context,
       builder: (context) {
@@ -34,27 +36,27 @@ class _LoginScreenState extends State<LoginScreen> {
       },
     );
 
-    if (emailController.text == "") {
+    if (_emailController.text == "") {
       Navigator.pop(context);
       displayMessageToUser("Please Enter Your Email", context);
       return;
     }
 
-    if (passwordController.text == "") {
+    if (_passwordController.text == "") {
       Navigator.pop(context);
       displayMessageToUser("Please Enter Your Password", context);
       return;
     }
 
     try {
-      UserCredential userCredential =
-          await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: emailController.text,
-        password: passwordController.text,
+      UserCredential? userCredential =
+          await _authService.loginWithEmailAndPassword(
+        email: _emailController.text,
+        password: _passwordController.text,
       );
 
       // Successful login
-      if (mounted) {
+      if (userCredential != null && mounted) {
         Navigator.pop(context); // Dismiss loading
         displayMessageToUser("Successfully Logged In", context);
       }
@@ -113,13 +115,13 @@ class _LoginScreenState extends State<LoginScreen> {
             CustomTextField(
               hintText: "Email",
               obscureText: false,
-              controller: emailController,
+              controller: _emailController,
             ),
             const SizedBox(height: 10),
             CustomTextField(
               hintText: "Password",
               obscureText: true,
-              controller: passwordController,
+              controller: _passwordController,
             ),
             const SizedBox(height: 10),
             Row(
@@ -133,7 +135,7 @@ class _LoginScreenState extends State<LoginScreen> {
             const SizedBox(height: 25),
             CustomButton(
               text: "Login",
-              onTap: login,
+              onTap: () => login(context),
             ),
             const SizedBox(height: 25),
             Row(

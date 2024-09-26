@@ -1,9 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:minimal_social_media_app/helper/helper_functions.dart';
+import 'package:minimal_social_media_app/services/auth_service.dart';
 
 class CustomDrawer extends StatelessWidget {
-  const CustomDrawer({super.key});
+  CustomDrawer({super.key});
+
+  final AuthService _authService = AuthService();
 
   void logout(BuildContext context) async {
     // Show Yes/No confirmation dialog before logging out
@@ -14,9 +17,12 @@ class CustomDrawer extends StatelessWidget {
     );
 
     if (result == true) {
-      // User pressed "Yes", proceed with logout
-      FirebaseAuth.instance.signOut();
-      displaySnackbarMessage(context, 'You have been logged out.');
+      try {
+        await _authService.logout(); // Use AuthService to log out
+        displaySnackbarMessage(context, 'You have been logged out.');
+      } catch (e) {
+        displaySnackbarMessage(context, 'Error during logout.');
+      }
     } else {
       // User pressed "No" or dismissed the dialog, do nothing
       displaySnackbarMessage(context, 'Logout canceled.');

@@ -30,7 +30,7 @@ class HomeScreen extends StatelessWidget {
         title: const Text("W A L L"),
         centerTitle: true,
       ),
-      drawer: const CustomDrawer(),
+      drawer: CustomDrawer(),
       body: Column(
         children: [
           Padding(
