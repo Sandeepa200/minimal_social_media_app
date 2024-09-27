@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:minimal_social_media_app/components/chat_bubble.dart';
 import 'package:minimal_social_media_app/services/auth_service.dart';
 import 'package:minimal_social_media_app/services/chat_service.dart';
 
@@ -79,7 +80,10 @@ class UserChatScreen extends StatelessWidget {
         crossAxisAlignment:
             isCurrentUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: [
-          Text(data['message']),
+          ChatBubble(
+            message: data['message'],
+            isCurrentUser: isCurrentUser,
+          )
         ],
       ),
     );
