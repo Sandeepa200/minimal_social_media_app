@@ -89,6 +89,17 @@ class CustomDrawer extends StatelessWidget {
                   Navigator.pushNamed(context, "/settings_screen");
                 },
               ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 25.0),
+              child: ListTile(
+                leading: const Icon(Icons.chat),
+                title: const Text("C H A T S"),
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.pushNamed(context, "/chats_screen");
+                },
+              ),
             )
           ]),
           Padding(
