@@ -10,11 +10,16 @@ import 'package:minimal_social_media_app/screens/users_screen.dart';
 import 'package:minimal_social_media_app/screens/weather_screen.dart';
 import 'package:minimal_social_media_app/theme/dark_mode.dart';
 import 'package:minimal_social_media_app/theme/light_mode.dart';
+import 'package:minimal_social_media_app/theme/theme_provider.dart';
+import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  runApp(const MyApp());
+  runApp(ChangeNotifierProvider(
+    create: (context) => ThemeProvider(),
+    child: const MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -25,8 +30,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: const AuthPage(),
-      theme: lightMode,
-      darkTheme: darkMode,
+      theme: Provider.of<ThemeProvider>(context).themeData,
+      //darkTheme: darkMode,
       routes: {
         '/login_or_register': (context) => const LoginOrRegister(),
         '/home_screen': (context) => HomeScreen(),
