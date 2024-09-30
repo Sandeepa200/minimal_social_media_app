@@ -4,7 +4,7 @@ import 'package:minimal_social_media_app/components/chat_bubble.dart';
 import 'package:minimal_social_media_app/services/auth_service.dart';
 import 'package:minimal_social_media_app/services/chat_service.dart';
 
-class UserChatScreen extends StatelessWidget {
+class UserChatScreen extends StatefulWidget {
   final String receiverEmail;
   final String receiverName;
 
@@ -14,24 +14,67 @@ class UserChatScreen extends StatelessWidget {
     required this.receiverName,
   });
 
+  @override
+  State<UserChatScreen> createState() => _UserChatScreenState();
+}
+
+class _UserChatScreenState extends State<UserChatScreen> {
   final TextEditingController _messageController = TextEditingController();
 
   final AuthService _authService = AuthService();
   final ChatService _chatService = ChatService();
 
+  //for text field for focus
+  FocusNode focusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+
+    focusNode.addListener(() {
+      if (focusNode.hasFocus) {
+        Future.delayed(
+          const Duration(milliseconds: 500),
+          () => scrollDown(),
+        );
+      }
+    });
+
+    Future.delayed(const Duration(milliseconds: 1000), () => scrollDown());
+  }
+
+  @override
+  void dispose() {
+    focusNode.dispose();
+    _messageController.dispose();
+    super.dispose();
+  }
+
+  final ScrollController _scrollController = ScrollController();
+  void scrollDown() {
+    _scrollController.animateTo(
+      _scrollController.position.maxScrollExtent,
+      duration: const Duration(milliseconds: 1),
+      curve: Curves.fastOutSlowIn,
+    );
+  }
+
   //send message
   void sendMessage() async {
     if (_messageController.text.isNotEmpty) {
-      await _chatService.sendMessage(receiverEmail, _messageController.text);
+      await _chatService.sendMessage(
+          widget.receiverEmail, _messageController.text);
       _messageController.clear();
     }
+
+    scrollDown();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(receiverName),
+        title: Text(widget.receiverName),
         centerTitle: true,
       ),
       body: Column(
@@ -46,7 +89,7 @@ class UserChatScreen extends StatelessWidget {
   Widget _buildMessagesList() {
     String senderEmail = _authService.getCurrentUser()!.email!;
     return StreamBuilder(
-      stream: _chatService.getMessages(senderEmail, receiverEmail),
+      stream: _chatService.getMessages(senderEmail, widget.receiverEmail),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return const Text("Something went wrong");
@@ -57,6 +100,7 @@ class UserChatScreen extends StatelessWidget {
         }
 
         return ListView(
+          controller: _scrollController,
           children: snapshot.data!.docs
               .map((doc) => _buildMessagesItem(doc))
               .toList(),
@@ -96,6 +140,7 @@ class UserChatScreen extends StatelessWidget {
         Expanded(
           child: TextField(
             controller: _messageController,
+            focusNode: focusNode,
             decoration: const InputDecoration(
               hintText: "Type a message...",
             ),
